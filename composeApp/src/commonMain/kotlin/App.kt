@@ -1,14 +1,12 @@
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.ktor.server.engine.*
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,10 +24,14 @@ fun App() {
         colorScheme = darkColorScheme()
     ) {
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Column {
+
+            Column(
+                modifier = Modifier.windowInsetsPadding(WindowInsets.safeContent)
+            ) {
                 var server by remember { mutableStateOf<ApplicationEngine?>(null) }
                 val scrollState = rememberScrollState()
                 var text by remember { mutableStateOf("") }
@@ -41,7 +43,7 @@ fun App() {
                     server = runServer(events)
                 }
 
-                Row {
+                Row(Modifier.padding(8.dp)) {
                     Button(onClick = {
                         if (server == null) {
                             server = runServer(events)
@@ -62,9 +64,8 @@ fun App() {
                     }
                 }
 
-                Teleprompter(
+                PrompterText(
                     mirrored = mirrored,
-                    modifier = Modifier.weight(1f),
                     text = text,
                     scrollState = scrollState,
                 )
@@ -85,10 +86,9 @@ fun App() {
 }
 
 @Composable
-private fun Teleprompter(
+private fun PrompterText(
     mirrored: Boolean,
-    modifier: Modifier = Modifier,
-    text: String = sampleText,
+    text: String,
     scrollState: ScrollState = rememberScrollState(),
 ) {
     Box(
