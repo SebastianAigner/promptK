@@ -2,9 +2,13 @@
 
 # PromptK: Multiplatform Teleprompter App
 
+_Built originally [live on air](https://twitch.tv/sebi_io) by [Sebastian Aigner](https://github.com/sebastianaigner) and
+[Marton Braun](https://github.com/zsmb13)!_
+
 - Built entirely using Kotlin Multiplatform and Compose Multiplatform
 - Available on Android, iOS, and Desktop
 - Embedded web interface for remote controlling the teleprompter
+- Built in [Fleet](https://blog.jetbrains.com/kotlin/2023/11/kotlin-multiplatform-tooling-in-fleet/)!
 
 This is a Kotlin Multiplatform project targeting Android, iOS, Desktop.
 
