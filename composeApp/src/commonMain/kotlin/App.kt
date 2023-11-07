@@ -1,7 +1,15 @@
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -37,28 +45,45 @@ fun App() {
                 var text by remember { mutableStateOf("") }
                 var mirrored by remember { mutableStateOf(false) }
 
+                var autoScroll by remember { mutableStateOf(false) }
+
                 val events = remember { MutableSharedFlow<TeleprompterEvent>() }
 
                 LaunchedEffect(events) {
                     server = runServer(events)
                 }
 
+                LaunchedEffect(autoScroll) {
+                    if (autoScroll) {
+                        while (true) {
+                            scrollState.animateScrollTo(
+                                value = scrollState.value + scrollAmount,
+                                animationSpec = tween(1000, easing = LinearEasing),
+                            )
+                        }
+                    }
+                }
+
                 Row(Modifier.padding(8.dp)) {
-                    Button(onClick = {
-                        if (server == null) {
-                            server = runServer(events)
+                    AnimatedContent(server != null) { serverRunning ->
+                        if (serverRunning) {
+                            Button(onClick = {
+                                server?.stop()
+                                server = null
+                            }) {
+                                Icon(Icons.Default.Close, "Stop server")
+                                Text("Stop server")
+                            }
+                        } else {
+                            Button(onClick = {
+                                server = runServer(events)
+                            }) {
+                                Icon(Icons.Default.PlayArrow, "Start server")
+                                Text("Start server")
+                            }
                         }
-                    }) {
-                        Text(text = "Start server")
                     }
-                    Button(
-                        onClick = {
-                            server?.stop()
-                            server = null
-                        }
-                    ) {
-                        Text(text = "Stop server")
-                    }
+
                     OutlinedButton(onClick = { mirrored = !mirrored }) {
                         Text(text = "Mirror")
                     }
@@ -76,6 +101,7 @@ fun App() {
                             Down -> scrollState.animateScrollTo(scrollState.value + scrollAmount)
                             Up -> scrollState.animateScrollTo(scrollState.value - scrollAmount)
                             ToggleMirroring -> mirrored = !mirrored
+                            ToggleScroll -> autoScroll = !autoScroll
                             is SetText -> text = event.text
                         }
                     }

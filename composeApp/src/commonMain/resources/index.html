@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>promptK</title>
+</head>
+
+<body>
+
+<button onclick="postRequest()">Mirror</button>
+<button onclick="up()">Up</button>
+<button onclick="down()">Down</button>
+<button onclick="scroll()">Auto scroll</button>
+
+
+<form id="myForm">
+    <textarea id="myText" name="content" rows="10" cols="30"></textarea>
+    <br/>
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+    document.getElementById('myForm').onsubmit = function (e) {
+        e.preventDefault();
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/setText", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(document.getElementById('myText').value);
+    }
+</script>
+<script>
+    function post(endpoint) {
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", endpoint, true);
+        xhttp.send();
+    }
+
+    function postRequest() {
+        post("/mirror")
+    }
+
+    function up() {
+        post("/up")
+    }
+
+    function down() {
+        post("/down")
+    }
+
+    function scroll() {
+        post("/scroll")
+    }
+</script>
+
+</body>
+
+</html>
