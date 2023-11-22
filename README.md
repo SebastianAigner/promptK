@@ -30,6 +30,7 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 - [X] Set title of Desktop app
 - [x] Tutorial popup showing the IP address
 - [ ] Functional tutorial popup to open the server or copy the address or share it or something
+    - [ ] "Go" button on iOS
 - [ ] Amper build system
 - [ ] Onboarding page
 - [ ] Beautify the web interface
