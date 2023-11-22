@@ -91,7 +91,7 @@ fun App() {
                     }
                 }
 
-                Row(Modifier.padding(8.dp).height(ButtonDefaults.MinHeight)) {
+                Row(Modifier.padding(8.dp).height(ButtonDefaults.MinHeight), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AnimatedContent(
                         targetState = serverState,
                         modifier = Modifier.width(160.dp)//.fillMaxHeight()
