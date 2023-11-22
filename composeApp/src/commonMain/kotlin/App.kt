@@ -54,10 +54,12 @@ fun App() {
 
                 var serverState by remember { mutableStateOf(ServerState.Stopped) }
 
+                var showConnectionPopup by remember { mutableStateOf(false) }
 
                 suspend fun startServer() {
                     serverState = ServerState.Loading
                     server = withContext(Dispatchers.IO) { runServer(events) }
+                    showConnectionPopup = true
                     serverState = ServerState.Running
                 }
 
@@ -75,9 +77,12 @@ fun App() {
                 var mirrored by remember { mutableStateOf(false) }
                 var autoScroll by remember { mutableStateOf(false) }
 
-
                 LaunchedEffect(events) {
                     startServer()
+
+                    withContext(Dispatchers.IO) {
+                        text = getIp()
+                    }
                 }
 
                 LaunchedEffect(autoScroll) {
@@ -91,7 +96,10 @@ fun App() {
                     }
                 }
 
-                Row(Modifier.padding(8.dp).height(ButtonDefaults.MinHeight), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    Modifier.padding(8.dp).height(ButtonDefaults.MinHeight),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     AnimatedContent(
                         targetState = serverState,
                         modifier = Modifier.width(160.dp)//.fillMaxHeight()
@@ -132,6 +140,8 @@ fun App() {
                     OutlinedButton(onClick = { mirrored = !mirrored }) {
                         Text(text = "Mirror")
                     }
+
+                    Text("Tutorial? ${showConnectionPopup}")
                 }
 
                 PrompterText(
@@ -148,6 +158,7 @@ fun App() {
                             ToggleMirroring -> mirrored = !mirrored
                             ToggleScroll -> autoScroll = !autoScroll
                             is SetText -> text = event.text
+                            is PageLoaded -> showConnectionPopup = false
                         }
                     }
                 }

@@ -5,11 +5,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.resource
 
@@ -19,13 +15,16 @@ data object Down : TeleprompterEvent
 data object ToggleMirroring : TeleprompterEvent
 data object ToggleScroll : TeleprompterEvent
 
+data object PageLoaded : TeleprompterEvent
+
 data class SetText(val text: String) : TeleprompterEvent
 
 @OptIn(ExperimentalResourceApi::class)
 fun runServer(mutableSharedFlow: MutableSharedFlow<TeleprompterEvent>): ApplicationEngine {
-    return embeddedServer(CIO, port = 8080) {
+    val server = embeddedServer(CIO, port = 8080) {
         routing {
             get("/") {
+                mutableSharedFlow.emit(PageLoaded)
                 val bytes = resource("index.html").readBytes()
                 call.respondText(contentType = ContentType.Text.Html, text = bytes.decodeToString())
             }
@@ -46,5 +45,7 @@ fun runServer(mutableSharedFlow: MutableSharedFlow<TeleprompterEvent>): Applicat
                 mutableSharedFlow.emit(ToggleScroll)
             }
         }
-    }.start()
+    }
+    println(getIp())
+    return server.start()
 }
