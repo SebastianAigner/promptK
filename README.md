@@ -23,3 +23,13 @@ This is a Kotlin Multiplatform project targeting Android, iOS, Desktop.
   you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+
+## Things we can explore in this repository
+
+- [X] Resolve server startup hiccups
+- [X] Set title of Desktop app
+- [ ] Tutorial popup to open the server
+- [ ] Amper build system
+- [ ] Onboarding page
+- [ ] Beautify the web interface
+- [ ] Highlight active line of prompter

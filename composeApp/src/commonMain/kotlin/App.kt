@@ -13,11 +13,16 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.ktor.server.engine.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 inline fun Modifier.mirror(): Modifier {
@@ -25,6 +30,10 @@ inline fun Modifier.mirror(): Modifier {
 }
 
 val scrollAmount = 200
+
+enum class ServerState {
+    Running, Stopped, Loading
+}
 
 @Composable
 fun App() {
@@ -41,16 +50,34 @@ fun App() {
                 modifier = Modifier.windowInsetsPadding(WindowInsets.safeContent)
             ) {
                 var server by remember { mutableStateOf<ApplicationEngine?>(null) }
-                val scrollState = rememberScrollState()
-                var text by remember { mutableStateOf("") }
-                var mirrored by remember { mutableStateOf(false) }
-
-                var autoScroll by remember { mutableStateOf(false) }
-
                 val events = remember { MutableSharedFlow<TeleprompterEvent>() }
 
+                var serverState by remember { mutableStateOf(ServerState.Stopped) }
+
+
+                suspend fun startServer() {
+                    serverState = ServerState.Loading
+                    server = withContext(Dispatchers.IO) { runServer(events) }
+                    serverState = ServerState.Running
+                }
+
+                suspend fun stopServer() {
+                    serverState = ServerState.Loading
+                    withContext(Dispatchers.IO) { server?.stop() }
+                    server = null
+                    serverState = ServerState.Stopped
+                }
+
+                val scope = rememberCoroutineScope()
+                val scrollState = rememberScrollState()
+
+                var text by remember { mutableStateOf("") }
+                var mirrored by remember { mutableStateOf(false) }
+                var autoScroll by remember { mutableStateOf(false) }
+
+
                 LaunchedEffect(events) {
-                    server = runServer(events)
+                    startServer()
                 }
 
                 LaunchedEffect(autoScroll) {
@@ -64,22 +91,40 @@ fun App() {
                     }
                 }
 
-                Row(Modifier.padding(8.dp)) {
-                    AnimatedContent(server != null) { serverRunning ->
-                        if (serverRunning) {
-                            Button(onClick = {
-                                server?.stop()
-                                server = null
-                            }) {
-                                Icon(Icons.Default.Close, "Stop server")
-                                Text("Stop server")
+                Row(Modifier.padding(8.dp).height(ButtonDefaults.MinHeight)) {
+                    AnimatedContent(
+                        targetState = serverState,
+                        modifier = Modifier.width(160.dp)//.fillMaxHeight()
+                    ) { state ->
+                        when (state) {
+                            ServerState.Running -> {
+                                Button(
+                                    onClick = {
+                                        scope.launch {
+                                            stopServer()
+                                        }
+                                    }
+                                ) {
+                                    Icon(Icons.Default.Close, "Stop server")
+                                    Text("Stop server")
+                                }
                             }
-                        } else {
-                            Button(onClick = {
-                                server = runServer(events)
-                            }) {
-                                Icon(Icons.Default.PlayArrow, "Start server")
-                                Text("Start server")
+
+                            ServerState.Stopped -> {
+                                Button(onClick = {
+                                    scope.launch {
+                                        startServer()
+                                    }
+                                }) {
+                                    Icon(Icons.Default.PlayArrow, "Start server")
+                                    Text("Start server")
+                                }
+                            }
+
+                            ServerState.Loading -> {
+                                Button(onClick = {}, enabled = false) {
+                                    CircularProgressIndicator(Modifier.size(24.dp))
+                                }
                             }
                         }
                     }

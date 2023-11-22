@@ -41,6 +41,7 @@ kotlin {
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation("ch.qos.logback:logback-classic:1.4.11")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
