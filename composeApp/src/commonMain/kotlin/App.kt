@@ -79,10 +79,6 @@ fun App() {
 
                 LaunchedEffect(events) {
                     startServer()
-
-                    withContext(Dispatchers.IO) {
-                        text = getIp()
-                    }
                 }
 
                 LaunchedEffect(autoScroll) {
@@ -140,8 +136,6 @@ fun App() {
                     OutlinedButton(onClick = { mirrored = !mirrored }) {
                         Text(text = "Mirror")
                     }
-
-                    Text("Tutorial? ${showConnectionPopup}")
                 }
 
                 PrompterText(
