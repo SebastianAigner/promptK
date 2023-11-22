@@ -28,7 +28,8 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 
 - [X] Resolve server startup hiccups
 - [X] Set title of Desktop app
-- [ ] Tutorial popup to open the server
+- [x] Tutorial popup showing the IP address
+- [ ] Functional tutorial popup to open the server or copy the address or share it or something
 - [ ] Amper build system
 - [ ] Onboarding page
 - [ ] Beautify the web interface

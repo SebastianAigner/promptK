@@ -65,6 +65,7 @@ fun App() {
 
                 suspend fun stopServer() {
                     serverState = ServerState.Loading
+                    showConnectionPopup = false
                     withContext(Dispatchers.IO) { server?.stop() }
                     server = null
                     serverState = ServerState.Stopped
@@ -92,58 +93,6 @@ fun App() {
                     }
                 }
 
-                Row(
-                    Modifier.padding(8.dp).height(ButtonDefaults.MinHeight),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    AnimatedContent(
-                        targetState = serverState,
-                        modifier = Modifier.width(160.dp)//.fillMaxHeight()
-                    ) { state ->
-                        when (state) {
-                            ServerState.Running -> {
-                                Button(
-                                    onClick = {
-                                        scope.launch {
-                                            stopServer()
-                                        }
-                                    }
-                                ) {
-                                    Icon(Icons.Default.Close, "Stop server")
-                                    Text("Stop server")
-                                }
-                            }
-
-                            ServerState.Stopped -> {
-                                Button(onClick = {
-                                    scope.launch {
-                                        startServer()
-                                    }
-                                }) {
-                                    Icon(Icons.Default.PlayArrow, "Start server")
-                                    Text("Start server")
-                                }
-                            }
-
-                            ServerState.Loading -> {
-                                Button(onClick = {}, enabled = false) {
-                                    CircularProgressIndicator(Modifier.size(24.dp))
-                                }
-                            }
-                        }
-                    }
-
-                    OutlinedButton(onClick = { mirrored = !mirrored }) {
-                        Text(text = "Mirror")
-                    }
-                }
-
-                PrompterText(
-                    mirrored = mirrored,
-                    text = text,
-                    scrollState = scrollState,
-                )
-
                 LaunchedEffect(events) {
                     events.collect { event ->
                         when (event) {
@@ -156,6 +105,90 @@ fun App() {
                         }
                     }
                 }
+
+                val snackbarHostState = remember { SnackbarHostState() }
+
+                LaunchedEffect(showConnectionPopup) {
+                    if (showConnectionPopup) {
+                        val ip = withContext(Dispatchers.IO) { getIp() }
+                        val address = "http://$ip:$PORT"
+                        val result: SnackbarResult =
+                            snackbarHostState.showSnackbar("Please use server at $address", actionLabel = "GO")
+                        when (result) {
+                            SnackbarResult.ActionPerformed -> {
+                                println("going")
+                                go(address)
+                            }
+
+                            SnackbarResult.Dismissed -> {
+                                println("dismissed")
+                            }
+                        }
+                    }
+                }
+
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackbarHostState,
+                            snackbar = { snackbarData -> Snackbar(snackbarData) }
+                        )
+                    },
+                ) {
+                    Column {
+                        Row(
+                            Modifier.padding(8.dp).height(ButtonDefaults.MinHeight),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            AnimatedContent(
+                                targetState = serverState,
+                                modifier = Modifier.width(160.dp)//.fillMaxHeight()
+                            ) { state ->
+                                when (state) {
+                                    ServerState.Running -> {
+                                        Button(onClick = {
+                                            scope.launch {
+                                                stopServer()
+                                            }
+                                        }) {
+                                            Icon(Icons.Default.Close, "Stop server")
+                                            Text("Stop server")
+                                        }
+                                    }
+
+                                    ServerState.Stopped -> {
+                                        Button(onClick = {
+                                            scope.launch {
+                                                startServer()
+                                            }
+                                        }) {
+                                            Icon(Icons.Default.PlayArrow, "Start server")
+                                            Text("Start server")
+                                        }
+                                    }
+
+                                    ServerState.Loading -> {
+                                        Button(onClick = {}, enabled = false) {
+                                            CircularProgressIndicator(Modifier.size(24.dp))
+                                        }
+                                    }
+                                }
+                            }
+
+                            OutlinedButton(onClick = { mirrored = !mirrored }) {
+                                Text(text = "Mirror")
+                            }
+                        }
+
+                        PrompterText(
+                            mirrored = mirrored,
+                            text = text,
+                            scrollState = scrollState,
+                        )
+                    }
+                }
+
+
             }
         }
     }

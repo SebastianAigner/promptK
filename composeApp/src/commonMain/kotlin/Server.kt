@@ -19,9 +19,11 @@ data object PageLoaded : TeleprompterEvent
 
 data class SetText(val text: String) : TeleprompterEvent
 
+const val PORT = 8080
+
 @OptIn(ExperimentalResourceApi::class)
 fun runServer(mutableSharedFlow: MutableSharedFlow<TeleprompterEvent>): ApplicationEngine {
-    val server = embeddedServer(CIO, port = 8080) {
+    val server = embeddedServer(CIO, PORT) {
         routing {
             get("/") {
                 mutableSharedFlow.emit(PageLoaded)
