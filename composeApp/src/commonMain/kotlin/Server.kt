@@ -27,25 +27,29 @@ fun runServer(mutableSharedFlow: MutableSharedFlow<TeleprompterEvent>): Applicat
         routing {
             get("/") {
                 mutableSharedFlow.emit(PageLoaded)
-//                val bytes = resource("index.html").readBytes()
                 val bytes = readResourceBytes("index.html")
                 call.respondText(contentType = ContentType.Text.Html, text = bytes.decodeToString())
             }
             post("up") {
                 mutableSharedFlow.emit(Up)
+                call.respond(HttpStatusCode.OK)
             }
             post("down") {
                 mutableSharedFlow.emit(Down)
+                call.respond(HttpStatusCode.OK)
             }
             post("setText") {
                 val text = call.receiveText()
                 mutableSharedFlow.emit(SetText(text))
+                call.respond(HttpStatusCode.OK)
             }
             post("mirror") {
                 mutableSharedFlow.emit(ToggleMirroring)
+                call.respond(HttpStatusCode.OK)
             }
             post("scroll") {
                 mutableSharedFlow.emit(ToggleScroll)
+                call.respond(HttpStatusCode.OK)
             }
         }
     }

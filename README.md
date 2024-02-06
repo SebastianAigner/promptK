@@ -36,3 +36,4 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 - [ ] Beautify the web interface
     - [x] Dark mode
 - [ ] Highlight active line of prompter
+- [ ] Make sure Ktor server on Desktop doesn't only bind on `localhost`
