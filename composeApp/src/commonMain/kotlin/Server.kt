@@ -6,8 +6,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.flow.MutableSharedFlow
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.resource
+import org.jetbrains.compose.resources.InternalResourceApi
+import org.jetbrains.compose.resources.readResourceBytes
 
 sealed interface TeleprompterEvent
 data object Up : TeleprompterEvent
@@ -21,13 +21,14 @@ data class SetText(val text: String) : TeleprompterEvent
 
 const val PORT = 8080
 
-@OptIn(ExperimentalResourceApi::class)
+@OptIn(InternalResourceApi::class)
 fun runServer(mutableSharedFlow: MutableSharedFlow<TeleprompterEvent>): ApplicationEngine {
     val server = embeddedServer(CIO, PORT) {
         routing {
             get("/") {
                 mutableSharedFlow.emit(PageLoaded)
-                val bytes = resource("index.html").readBytes()
+//                val bytes = resource("index.html").readBytes()
+                val bytes = readResourceBytes("index.html")
                 call.respondText(contentType = ContentType.Text.Html, text = bytes.decodeToString())
             }
             post("up") {
