@@ -29,11 +29,13 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 - [X] Resolve server startup hiccups
 - [X] Set title of Desktop app
 - [x] Tutorial popup showing the IP address
-- [ ] Functional tutorial popup to open the server or copy the address or share it or something
-    - [ ] "Go" button on iOS
+- [x] Functional tutorial popup to open the server or copy the address or share it or something
+    - [x] "Go" button on iOS
+- [ ] Scroll speed control
+- [ ] Make sure that on iOS, sharing the URL doesn't dismiss the blur/popup
 - [ ] Amper build system
 - [ ] Onboarding page
 - [ ] Beautify the web interface
     - [x] Dark mode
 - [ ] Highlight active line of prompter
-- [ ] Make sure Ktor server on Desktop doesn't only bind on `localhost`
+- [x] Make sure Ktor server on Desktop doesn't only bind on `localhost`

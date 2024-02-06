@@ -117,7 +117,7 @@ fun App() {
 
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.alpha(fadeAlpha.asState().value),
+                modifier = Modifier.alpha(fadeAlpha.asState().value).windowInsetsPadding(WindowInsets.safeContent),
             ) {
                 Column(
                     Modifier.fillMaxSize()
@@ -179,6 +179,7 @@ fun App() {
                 AnimatedVisibility(showConnectionPopup, enter = fadeIn(), exit = fadeOut()) {
                     PopupDialog(Modifier)
                 }
+
             }
         }
     }

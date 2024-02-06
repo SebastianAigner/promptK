@@ -2,8 +2,8 @@ import java.awt.Desktop
 import java.net.URI
 import java.util.*
 
-actual fun go(text: String) {
-    val uri = URI(text)
+actual fun go(address: String) {
+    val uri = URI(address)
     val osName by lazy(LazyThreadSafetyMode.NONE) { System.getProperty("os.name").lowercase(Locale.getDefault()) }
     val desktop = Desktop.getDesktop()
     when {

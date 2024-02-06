@@ -1,1 +1,1 @@
-expect fun go(text: String)
+expect fun go(address: String)
