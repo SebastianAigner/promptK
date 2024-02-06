@@ -34,4 +34,5 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 - [ ] Amper build system
 - [ ] Onboarding page
 - [ ] Beautify the web interface
+    - [x] Dark mode
 - [ ] Highlight active line of prompter
