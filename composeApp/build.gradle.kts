@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.compose.ExperimentalComposeLibrary
 
 val ktor_version = "2.3.5"
 
@@ -43,12 +42,17 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation("ch.qos.logback:logback-classic:1.4.11")
         }
+        commonTest.dependencies {
+            implementation("org.jetbrains.kotlin:kotlin-test:1.9.22")
+        }
         commonMain.dependencies {
+            implementation(compose.components.uiToolingPreview)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
 //            implementation(compose.material)
             implementation(compose.material3)
-            @OptIn(ExperimentalComposeLibrary::class)
+//            implementation(compose.uiTooling)
             implementation(compose.components.resources)
             implementation("io.ktor:ktor-server-core:$ktor_version")
             implementation("io.ktor:ktor-server-cio:$ktor_version")

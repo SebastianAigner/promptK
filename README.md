@@ -39,3 +39,9 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
     - [x] Dark mode
 - [ ] Highlight active line of prompter
 - [x] Make sure Ktor server on Desktop doesn't only bind on `localhost`
+- [ ] Make sure reopening server on iOS doesn't cause "address already in use"
+- [x] Write a test
+    - [ ] Use power assert
+- [x] Add basic localization
+    - [x] Allow per-app language choice on Android
+    - [ ] Remove workaround for Compose state in templated string resource

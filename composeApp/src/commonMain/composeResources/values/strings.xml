@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="start_server">Start server</string>
+    <string name="stop_server">Stop server</string>
+    <string name="mirror">Mirror</string>
+    <string name="please_use_server_at">Please use server at %1$s</string>
+</resources>

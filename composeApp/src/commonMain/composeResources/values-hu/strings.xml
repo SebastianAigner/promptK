@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="start_server">Szerver indítása</string>
+    <string name="stop_server">Szerver leállítása</string>
+    <string name="mirror">Tükrözés</string>
+    <string name="please_use_server_at">Használd a szervert a %1$s címen</string>
+</resources>

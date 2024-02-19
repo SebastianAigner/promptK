@@ -14,15 +14,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.ktor.server.engine.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
+import promptk.composeapp.generated.resources.Res
+import promptk.composeapp.generated.resources.mirror
+import promptk.composeapp.generated.resources.start_server
+import promptk.composeapp.generated.resources.stop_server
+import promptk.composeapp.generated.resources.please_use_server_at
 
 
 inline fun Modifier.mirror(): Modifier {
@@ -35,6 +43,7 @@ enum class ServerState {
     Running, Stopped, Loading
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
     MaterialTheme(
@@ -139,8 +148,8 @@ fun App() {
                                             stopServer()
                                         }
                                     }) {
-                                        Icon(Icons.Default.Close, "Stop server")
-                                        Text("Stop server")
+                                        Icon(Icons.Default.Close, stringResource(Res.string.stop_server))
+                                        Text(stringResource(Res.string.stop_server))
                                     }
                                 }
 
@@ -150,8 +159,8 @@ fun App() {
                                             startServer()
                                         }
                                     }) {
-                                        Icon(Icons.Default.PlayArrow, "Start server")
-                                        Text("Start server")
+                                        Icon(Icons.Default.PlayArrow, stringResource(Res.string.start_server))
+                                        Text(stringResource(Res.string.start_server))
                                     }
                                 }
 
@@ -164,7 +173,7 @@ fun App() {
                         }
 
                         OutlinedButton(onClick = { mirrored = !mirrored }) {
-                            Text(text = "Mirror")
+                            Text(stringResource(Res.string.mirror))
                         }
                     }
 
@@ -185,6 +194,7 @@ fun App() {
     }
 }
 
+@OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun PopupDialog(modifier: Modifier = Modifier) {
 
@@ -201,14 +211,12 @@ fun PopupDialog(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Please use server at")
-            Text(address,
+            Text(
+                text = stringResource(Res.string.please_use_server_at).replace("%1\$s", address), // TODO: Fix this
+                modifier = Modifier.clickable { go(address) }.basicMarquee(),
                 color = MaterialTheme.colorScheme.secondary,
-                textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable {
-                    go(address)
-                })
+                overflow = TextOverflow.Visible
+            )
         }
     }
 }
