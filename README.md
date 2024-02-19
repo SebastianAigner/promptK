@@ -26,8 +26,8 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 
 ## Things we can explore in this repository
 
-- [X] Resolve server startup hiccups
-- [X] Set title of Desktop app
+- [x] Resolve server startup hiccups
+- [x] Set title of Desktop app
 - [x] Tutorial popup showing the IP address
 - [x] Functional tutorial popup to open the server or copy the address or share it or something
     - [x] "Go" button on iOS
