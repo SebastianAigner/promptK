@@ -45,3 +45,4 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 - [x] Add basic localization
     - [x] Allow per-app language choice on Android
     - [ ] Remove workaround for Compose state in templated string resource
+- [ ] Publish the Android app as an APK
